@@ -18,7 +18,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  */
 @SpringBootApplication
 @RestController
-/*@EnableSwagger2*/
+@EnableSwagger2
 public class  DemoApplication {
 
 	/**

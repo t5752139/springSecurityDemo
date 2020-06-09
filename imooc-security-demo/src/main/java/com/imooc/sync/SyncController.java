@@ -22,7 +22,7 @@ public class SyncController {
      * @return
      */
     @RequestMapping("sync")
-    public Callable <String>  callable (){
+    public Callable<String>  callable (){
         logger.info("主线程开始");
             //开启异步
         Callable<String> callable = new Callable<String>() {
@@ -37,9 +37,6 @@ public class SyncController {
         logger.info("主线程结束");
 
         return callable;
-
-
-
     }
 
 

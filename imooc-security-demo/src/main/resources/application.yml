@@ -11,5 +11,12 @@ server:
   port: 8888
 security:
   basic:
-    #关闭security 登录
-    enabled: false
+    #关闭security false   登录
+    enabled: true
+#imooc.security.browser.loginPage = /demo-signIn.html
+imooc:
+  browser:
+    loginPage: /demo-signIn.html
+    loginType: REDIRECT
+
+
