@@ -1,32 +1,15 @@
-/**
- * 
- */
 package com.imooc.exception;
 
-/**
- * @author zhailiang
- *
- */
+import lombok.Data;
+
+@Data
 public class UserNotExistException extends RuntimeException {
+    private static final Long serUID= -12341564654l;
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6112780192479692859L;
-	
-	private String id;
-	
-	public UserNotExistException(String id) {
-		super("user not exist");
-		this.id = id;
-	}
 
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
+    private String id;
+    public UserNotExistException(String id) {
+        super("user not exception");
+        this.id=id;
+    }
 }

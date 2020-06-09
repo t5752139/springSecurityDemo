@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
+import com.imooc.DemoApplication;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +33,7 @@ import org.springframework.web.context.WebApplicationContext;
  *
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = DemoApplication.class)
 public class UserControllerTest {
 
 	@Autowired
@@ -58,12 +59,17 @@ public class UserControllerTest {
 	@Test
 	public void whenQuerySuccess() throws Exception {
 		String result = mockMvc.perform(
-				get("/user").param("username", "jojo").param("age", "18").param("ageTo", "60").param("xxx", "yyy")
+				get("/user")
+						.param("username", "jojo")
+						.param("age", "18")
+						.param("ageTo", "60")
+						.param("xxx", "yyy")
 						// .param("size", "15")
 						// .param("page", "3")
 						// .param("sort", "age,desc")
 						.contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(status().isOk()).andExpect(jsonPath("$.length()").value(3))
+				.andExpect(status().isOk())
+				//.andExpect(jsonPath("$.length()").value(3))
 				.andReturn().getResponse().getContentAsString();
 		
 		System.out.println(result);
@@ -107,11 +113,11 @@ public class UserControllerTest {
 		
 		Date date = new Date();
 		System.out.println(date.getTime());
-		String content = "{\"username\":\"tom\",\"password\":null,\"birthday\":"+date.getTime()+"}";
+		String content = "{\"name\":\"tom\",\"password\":null,\"data\":"+date.getTime()+"}";
 		String reuslt = mockMvc.perform(post("/user").contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(content))
-//				.andExpect(status().isOk())
-//				.andExpect(jsonPath("$.id").value("1"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.id").value("1"))
 				.andReturn().getResponse().getContentAsString();
 		
 		System.out.println(reuslt);
@@ -122,8 +128,9 @@ public class UserControllerTest {
 		
 		Date date = new Date(LocalDateTime.now().plusYears(1).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
 		System.out.println(date.getTime());
-		String content = "{\"id\":\"1\", \"username\":\"tom\",\"password\":null,\"birthday\":"+date.getTime()+"}";
-		String reuslt = mockMvc.perform(put("/user/1").contentType(MediaType.APPLICATION_JSON_UTF8)
+		String content = "{\"id\":\"1\", \"name\":\"tom\",\"password\":1,\"data\":"+date.getTime()+"}";
+		String reuslt = mockMvc.perform(put("/user")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(content))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.id").value("1"))
