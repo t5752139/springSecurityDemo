@@ -4,6 +4,10 @@ package com.imooc.web.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.imooc.dto.User;
 import com.imooc.exception.UserNotExistException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,8 +17,21 @@ import javax.validation.Valid;
 @RequestMapping("/user")
 public class UserController {
 
+
+    @RequestMapping("/me")  //也可以加上这个Authentication authentication
+    public Object getCruuceUser(@AuthenticationPrincipal UserDetails user){
+        System.out.println(user.getUsername());
+        System.out.println(user.getPassword());
+
+        return user;
+
+       // return SecurityContextHolder.getContext().getAuthentication();
+    }
+
+
+
     @GetMapping
-    @JsonView(User.UsersimpleView.class)
+    @JsonView(User.UserdataView.class)
     public User getuser(){
         User user = new User();
         user.setId(1);

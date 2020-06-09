@@ -1,6 +1,7 @@
 package com.imooc.security.browser;
 
 import com.imooc.security.core.SecurityProperties;
+import com.imooc.security.validata.ValidataCodeFeiltel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -34,8 +36,16 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-                 //开启表单登录
-        http.formLogin()
+        ValidataCodeFeiltel validataCodeFeiltel = new ValidataCodeFeiltel();
+        validataCodeFeiltel.setAuthenticationFailureHandler(authenticationFailureHandler);
+
+
+
+        http
+                //设置过滤器 把自定义的验证码设置进去
+                .addFilterBefore(validataCodeFeiltel, UsernamePasswordAuthenticationFilter.class)
+                //开启表单登录
+                .formLogin()
                 //弹框登录
                // http.httpBasic()
                 //登录后回去找着个路径下的url
@@ -49,7 +59,8 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 //当访问这个页面是时候是不需要身份验证
                 .antMatchers("/authentication/require",
-                        securityProperties.getBrowserProperties().getLoginPage()).permitAll()
+                        securityProperties.getBrowserProperties().getLoginPage(),
+                        "/code/image").permitAll()
                 //任何请求
                 .anyRequest()
                 //都需要身份认证
